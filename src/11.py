@@ -65,6 +65,7 @@ class Monkey:
                 item = item * operation_arg
             if self.divide_worry_level:
                 item = int(item / 3)
+            item %= self.max_mod
 
             if item % self.test_mod == 0:
                 evaluated_items.append((item, self.true_case))
@@ -76,7 +77,7 @@ class Monkey:
 
 
 def main_1(rounds: int, divide_worry_level: bool) -> int:
-    data_path = Path("./data/11_example.txt")
+    data_path = Path("./data/11.txt")
 
     cur_lines = []
     monkeys: list[Monkey] = []
@@ -92,6 +93,10 @@ def main_1(rounds: int, divide_worry_level: bool) -> int:
 
             cur_lines.append(line)
         monkeys.append(Monkey.from_text(cur_lines, divide_worry_level))
+
+    max_mod = np.prod([monkey.test_mod for monkey in monkeys])
+    for monkey in monkeys:
+        monkey.max_mod = max_mod
 
     for _ in progressbar(range(rounds)):
         t = 0
